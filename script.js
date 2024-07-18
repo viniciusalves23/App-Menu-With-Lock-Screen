@@ -32,7 +32,7 @@ const T = {
         return `${hours}:${T.formatSegment(minutes)}`;
     },
     formatHours: (hours) => {
-        return hours % 12 === 0 ? 12 : hours % 12;
+        return hours % 24 === 0 ? 24 : hours % 24;
     },
     formatSegment: (segment) => {
         return segment < 10 ? `0${segment}` : segment;
@@ -46,7 +46,7 @@ const LogInUtility = {
                     resolve(true);
                 }
                 else {
-                    reject(`Invalid pin: ${pin}`);
+                    reject(`Pin Inválido: ${pin}`);
                 }
             }, N.rand(300, 700));
         });
@@ -91,19 +91,21 @@ const ScrollableComponent = (props) => {
     return (React.createElement("div", { ref: ref, className: classNames("scrollable-component", props.className), id: props.id, onMouseDown: handleOnMouseDown, onMouseMove: handleOnMouseMove, onMouseUp: handleOnMouseUp, onMouseLeave: handleOnMouseUp }, props.children));
 };
 const WeatherSnap = () => {
-    const [temperature] = React.useState(N.rand(65, 85));
+    const [temperatureF] = React.useState(N.rand(65, 85)); // Temperatura aleatória em Fahrenheit
+    const temperatureC = ((temperatureF - 32) * 5 / 9).toFixed(0); // Conversão para Celsius e arredondamento para nenhuma casa decimal
+
     return (React.createElement("span", { className: "weather" },
-        React.createElement("i", { className: "weather-type", className: "fa-duotone fa-sun" }),
-        React.createElement("span", { className: "weather-temperature-value" }, temperature),
-        React.createElement("span", { className: "weather-temperature-unit" }, "\u00B0F")));
+        React.createElement("i", { className: "weather-type", className: "fa fa-duotone fa fa-sun" }),
+        React.createElement("span", { className: "weather-temperature-value" }, temperatureC),
+        React.createElement("span", { className: "weather-temperature-unit" }, "\u00B0C")));
 };
 const Reminder = () => {
     return (React.createElement("div", { className: "reminder" },
         React.createElement("div", { className: "reminder-icon" },
-            React.createElement("i", { className: "fa-regular fa-bell" })),
+            React.createElement("i", { className: "fa fa-regular fa-bell" })),
         React.createElement("span", { className: "reminder-text" },
-            "Extra cool people meeting ",
-            React.createElement("span", { className: "reminder-time" }, "10AM"))));
+            "Reunião de trabalho às ",
+            React.createElement("span", { className: "reminder-time" }, "22:00"))));
 };
 const Time = () => {
     const date = useCurrentDateEffect();
@@ -178,7 +180,7 @@ const Pin = () => {
     };
     const getErrorText = () => {
         if (userStatus === UserStatus.LogInError) {
-            return (React.createElement("span", { id: "app-pin-error-text" }, "Invalid"));
+            return (React.createElement("span", { id: "app-pin-error-text" }, "PIN Inválido"));
         }
     };
     return (React.createElement("div", { id: "app-pin-wrapper" },
@@ -189,7 +191,7 @@ const Pin = () => {
             React.createElement(PinDigit, { focused: pin.length === 2, value: pin[2] }),
             React.createElement(PinDigit, { focused: pin.length === 3, value: pin[3] })),
         React.createElement("h3", { id: "app-pin-label" },
-            "Enter PIN (1234) ",
+            "Insira o PIN (1234) ",
             getErrorText(),
             " ",
             getCancelText())));
@@ -211,16 +213,16 @@ const QuickNav = () => {
     const getItems = () => {
         return [{
                 id: 1,
-                label: "Weather"
+                label: "Clima"
             }, {
                 id: 2,
-                label: "Food"
+                label: "Comida"
             }, {
                 id: 3,
-                label: "Apps"
+                label: "Aplicativos"
             }, {
                 id: 4,
-                label: "Movies"
+                label: "Filmes"
             }].map((item) => {
             return (React.createElement("div", { key: item.id, className: "quick-nav-item clear-button" },
                 React.createElement("span", { className: "quick-nav-item-label" }, item.label)));
@@ -232,101 +234,109 @@ const Weather = () => {
     const getDays = () => {
         return [{
                 id: 1,
-                name: "Mon",
-                temperature: N.rand(60, 80),
+                name: "Segunda",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Sunny
             }, {
                 id: 2,
-                name: "Tues",
-                temperature: N.rand(60, 80),
+                name: "Terça",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Sunny
             }, {
                 id: 3,
-                name: "Wed",
-                temperature: N.rand(60, 80),
+                name: "Quarta",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Cloudy
             }, {
                 id: 4,
-                name: "Thurs",
-                temperature: N.rand(60, 80),
+                name: "Quinta",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Rainy
             }, {
                 id: 5,
-                name: "Fri",
-                temperature: N.rand(60, 80),
+                name: "Sexta",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Stormy
             }, {
                 id: 6,
-                name: "Sat",
-                temperature: N.rand(60, 80),
+                name: "Sábado",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Sunny
             }, {
                 id: 7,
-                name: "Sun",
-                temperature: N.rand(60, 80),
+                name: "Domingo",
+                temperature: Math.floor(N.rand(16, 27)), // Convertendo para Celsius
                 weather: WeatherType.Cloudy
             }].map((day) => {
             const getIcon = () => {
                 switch (day.weather) {
                     case WeatherType.Cloudy:
-                        return "fa-duotone fa-clouds";
+                        return "fa fa-duotone fa-clouds";
                     case WeatherType.Rainy:
-                        return "fa-duotone fa-cloud-drizzle";
+                        return "fa fa-duotone fa-cloud-drizzle";
                     case WeatherType.Stormy:
-                        return "fa-duotone fa-cloud-bolt";
+                        return "fa fa-duotone fa-cloud-bolt";
                     case WeatherType.Sunny:
-                        return "fa-duotone fa-sun";
+                        return "fa fa-duotone fa-sun";
                 }
             };
             return (React.createElement("div", { key: day.id, className: "day-card" },
                 React.createElement("div", { className: "day-card-content" },
                     React.createElement("span", { className: "day-weather-temperature" },
                         day.temperature,
-                        React.createElement("span", { className: "day-weather-temperature-unit" }, "\u00B0F")),
+                        React.createElement("span", { className: "day-weather-temperature-unit" }, "\u00B0C")),
                     React.createElement("i", { className: classNames("day-weather-icon", getIcon(), day.weather.toLowerCase()) }),
                     React.createElement("span", { className: "day-name" }, day.name))));
         });
     };
-    return (React.createElement(MenuSection, { icon: "fa-solid fa-sun", id: "weather-section", scrollable: true, title: "How's it look out there?" }, getDays()));
+    return (React.createElement(MenuSection, { icon: "fa fa-solid fa-sun", id: "weather-section", scrollable: true, title: "Como está o clima lá fora?" }, getDays()));
 };
 const Tools = () => {
     const getTools = () => {
+
+        const social1image = './assets/images/social/banner-social-1.jpg';
+        const social2image = './assets/images/social/banner-social-2.jpg';
+        const social3image = './assets/images/social/banner-social-3.jpg';
+        const social4image = './assets/images/social/banner-social-4.jpg';
+        const social5image = './assets/images/social/banner-social-5.jpg';
+        const social6image = './assets/images/social/banner-social-6.jpg';
+
         return [{
-                icon: "fa-solid fa-cloud-sun",
+                icon: "fa fa-solid  fa-cloud-sun",
                 id: 1,
-                image: "https://images.unsplash.com/photo-1492011221367-f47e3ccd77a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fHdlYXRoZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                label: "Weather",
-                name: "Cloudly"
+                image: social1image,
+                label: "CLIMA",
+                name: "Nublado"
             }, {
-                icon: "fa-solid fa-calculator-simple",
+                icon: "fa fa-solid fa-calculator-simple",
                 id: 2,
-                image: "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Y2FsY3VsYXRvcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                label: "Calc",
-                name: "Mathio"
+                image: social2image,
+                label: "CÁLCULO",
+                name: "Calculadora"
             }, {
-                icon: "fa-solid fa-piggy-bank",
+                icon: "fa fa-solid fa-piggy-bank",
                 id: 3,
-                image: "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8YmFua3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                label: "Bank",
-                name: "Cashy"
+                image: social3image,
+                label: "FINANÇAS",
+                name: "Banco"
             }, {
-                icon: "fa-solid fa-plane",
+                icon: "fa fa-solid fa-plane",
                 id: 4,
-                image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YWlycGxhbmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                label: "Travel",
-                name: "Fly-er-io-ly"
+                image: social4image,
+                label: "VIAGEM",
+                name: "Planner"
             }, {
-                icon: "fa-solid fa-gamepad-modern",
+                icon: "fa fa-solid fa-gamepad-modern",
                 id: 5,
-                image: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8dmlkZW8lMjBnYW1lc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                label: "Games",
-                name: "Gamey"
+                image: social5image,
+                label: "JOGOS",
+                name: "Play Store"
             }, {
-                icon: "fa-solid fa-video",
+                icon: "fa fa-solid fa-video",
                 id: 6,
-                image: "https://images.unsplash.com/photo-1578022761797-b8636ac1773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHZpZGVvJTIwY2hhdHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                label: "Video Chat",
-                name: "Chatty"
+                image: social6image,
+                label: "CHAT",
+                name: "Google Meet"
             }].map((tool) => {
             const styles = {
                 backgroundImage: `url(${tool.image})`
@@ -340,30 +350,36 @@ const Tools = () => {
                     React.createElement("i", { className: classNames(tool.icon, "tool-card-icon") }))));
         });
     };
-    return (React.createElement(MenuSection, { icon: "fa-solid fa-toolbox", id: "tools-section", title: "What's Appening?" }, getTools()));
+    return (React.createElement(MenuSection, { icon: "fa fa-solid fa-toolbox", id: "tools-section", title: "O que está acontecendo?" }, getTools()));
 };
 const Restaurants = () => {
     const getRestaurants = () => {
+
+        const restaurante1image = './assets/images/restaurantes/banner-restaurante-1.jpg';
+        const restaurante2image = './assets/images/restaurantes/banner-restaurante-2.jpg';
+        const restaurante3image = './assets/images/restaurantes/banner-restaurante-3.jpg';
+        const restaurante4image = './assets/images/restaurantes/banner-restaurante-4.jpg';
+
         return [{
-                desc: "The best burgers in town",
+                desc: "Os melhores hambúrgueres",
                 id: 1,
-                image: "https://images.unsplash.com/photo-1606131731446-5568d87113aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YnVyZ2Vyc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-                title: "Burgers"
+                image: restaurante1image,
+                title: "Hambúrgueres"
             }, {
-                desc: "The worst ice-cream around",
+                desc: "O melhor sorvete da região",
                 id: 2,
-                image: "https://images.unsplash.com/photo-1576506295286-5cda18df43e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8aWNlJTIwY3JlYW18ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                title: "Ice Cream"
+                image: restaurante2image,
+                title: "Sorvete"
             }, {
-                desc: "This 'Za be gettin down",
+                desc: "Os melhores preços e sabores",
                 id: 3,
-                image: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGl6emF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                image: restaurante3image,
                 title: "Pizza"
             }, {
-                desc: "BBQ ain't need no rhyme",
+                desc: "Churrasco não precisa de rima",
                 id: 4,
-                image: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8YmFyYmVxdWV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                title: "BBQ"
+                image: restaurante4image,
+                title: "Churrasco"
             }].map((restaurant) => {
             const styles = {
                 backgroundImage: `url(${restaurant.image})`
@@ -375,34 +391,40 @@ const Restaurants = () => {
                         React.createElement("span", { className: "restaurant-card-desc" }, restaurant.desc)))));
         });
     };
-    return (React.createElement(MenuSection, { icon: "fa-regular fa-pot-food", id: "restaurants-section", title: "Get it delivered!" }, getRestaurants()));
+    return (React.createElement(MenuSection, { icon: "fa fa-regular fa-pot-food", id: "restaurants-section", title: "Peça de casa!" }, getRestaurants()));
 };
+
 const Movies = () => {
     const getMovies = () => {
+        const filme1image = './assets/images/filmes/banner-filme-1.jpg';
+        const filme2image = './assets/images/filmes/banner-filme-2.jpg';
+        const filme3image = './assets/images/filmes/banner-filme-3.jpg';
+        const filme4image = './assets/images/filmes/banner-filme-4.jpg';
+
         return [{
-                desc: "A tale of some people watching over a large portion of space.",
+                desc: "Peter Quill vai reunir sua equipe para uma perigosa missão: salvar Rocket – missão que, se falhar, pode levar ao fim dos Guardiões como os conhecemos.",
                 id: 1,
-                icon: "fa-solid fa-galaxy",
-                image: "https://images.unsplash.com/photo-1596727147705-61a532a659bd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWFydmVsfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-                title: "Protectors of the Milky Way"
+                icon: "fa fa-solid fa-galaxy",
+                image: filme1image,
+                title: "Guardiões da Galáxia: Vol. 3"
             }, {
-                desc: "Some people leave their holes to disrupt some things.",
+                desc: "Agora, Gru (Leandro Hassum), Lucy (Maria Clara Gueiros), Margo (Bruna Laynes), Edith (Ana Elena Bittencourt) e Agnes (Pamella Rodrigues) dão as boas-vindas a um novo membro da família: Gru Jr., que pretende atormentar seu pai.",
                 id: 2,
-                icon: "fa-solid fa-hat-wizard",
-                image: "https://images.unsplash.com/photo-1535666669445-e8c15cd2e7d9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bG9yZCUyMG9mJTIwdGhlJTIwcmluZ3N8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                title: "Hole People"
+                icon: "fa fa-solid fa-hat-wizard",
+                image: filme2image,
+                title: "Meu Malvado Favorito 4"
             }, {
-                desc: "A boy with a dent in his head tries to stop a bad guy. And by bad I mean bad at winning.",
+                desc: "Mais de uma década após os acontecimentos do primeiro filme, este deslumbrante novo filme conta a história da família Sully e apresenta ao público os majestosos tulkun oceânicos.",
                 id: 3,
-                icon: "fa-solid fa-broom-ball",
-                image: "https://images.unsplash.com/photo-1632266484284-a11d9e3a460a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGhhcnJ5JTIwcG90dGVyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-                title: "Pot of Hair"
+                icon: "fa fa-solid fa-broom-ball",
+                image: filme3image,
+                title: "Avatar: O Caminho Da Água"
             }, {
-                desc: "A long drawn out story of some people fighting over some space. Cuz there isn't enough of it.",
+                desc: "Divertidamente 2 marca a sequência da famosa história de Riley (Kaitlyn Dias). Com um salto temporal, a garota agora se encontra mais velha, com 13 anos de idade, passando pela tão temida pré-adolescência",
                 id: 4,
-                icon: "fa-solid fa-starship-freighter",
-                image: "https://images.unsplash.com/photo-1533613220915-609f661a6fe1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8c3RhciUyMHdhcnN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                title: "Area Fights"
+                icon: "fa fa-solid fa-starship-freighter",
+                image: filme4image,
+                title: "Divertida-Mente 2"
             }].map((movie) => {
             const styles = {
                 backgroundImage: `url(${movie.image})`
@@ -417,7 +439,7 @@ const Movies = () => {
                     React.createElement("i", { className: movie.icon }))));
         });
     };
-    return (React.createElement(MenuSection, { icon: "fa-solid fa-camera-movie", id: "movies-section", scrollable: true, title: "Popcorn time!" }, getMovies()));
+    return (React.createElement(MenuSection, { icon: "fa fa-solid fa-camera-movie", id: "movies-section", scrollable: true, title: "Hora da pipoca!" }, getMovies()));
 };
 const UserStatusButton = (props) => {
     const { userStatus, setUserStatusTo } = React.useContext(AppContext);
@@ -436,11 +458,11 @@ const Menu = () => {
                         React.createElement(Info, { id: "app-menu-info" }),
                         React.createElement(Reminder, null)),
                     React.createElement("div", { className: "app-menu-content-header-section" },
-                        React.createElement(UserStatusButton, { icon: "fa-solid fa-arrow-right-from-arc", id: "sign-out-button", userStatus: UserStatus.LoggedOut }))),
+                        React.createElement(UserStatusButton, { icon: "fa fa-solid fa-arrow-right-from-arc", id: "sign-out-button", userStatus: UserStatus.LoggedOut }))),
                 React.createElement(QuickNav, null),
-                React.createElement("a", { id: "youtube-link", className: "clear-button", href: "https://www.youtube.com/c/Hyperplexed", target: "_blank" },
-                    React.createElement("i", { className: "fa-brands fa-youtube" }),
-                    React.createElement("span", null, "Hyperplexed")),
+                React.createElement("a", { id: "github-link", className: "clear-button", href: "https://portfolio-2024-vinicius-alves.vercel.app/", target: "_blank" },
+                    React.createElement("i", { className: "fa fa-solid fa-globe" }),
+                    React.createElement("span", null, "Vinicius Alves")),
                 React.createElement(Weather, null),
                 React.createElement(Restaurants, null),
                 React.createElement(Tools, null),
@@ -458,7 +480,7 @@ const Background = () => {
 };
 const Loading = () => {
     return (React.createElement("div", { id: "app-loading-icon" },
-        React.createElement("i", { className: "fa-solid fa-spinner-third" })));
+        React.createElement("i", { className: "fa fa-solid fa-spinner-third" })));
 };
 const AppContext = React.createContext(null);
 const App = () => {
@@ -473,7 +495,7 @@ const App = () => {
             React.createElement(Menu, null),
             React.createElement(Background, null),
             React.createElement("div", { id: "sign-in-button-wrapper" },
-                React.createElement(UserStatusButton, { icon: "fa-solid fa-arrow-right-to-arc", id: "sign-in-button", userStatus: UserStatus.LoggingIn })),
+                React.createElement(UserStatusButton, { icon: "fa fa-solid fa-arrow-right-to-arc", id: "sign-in-button", userStatus: UserStatus.LoggingIn })),
             React.createElement(Loading, null))));
 };
 ReactDOM.render(React.createElement(App, null), document.getElementById("root"));

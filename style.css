@@ -160,8 +160,8 @@ body input, body h1, body h3, body a, body span {
   z-index: 1;
 }
 #app #app-background #app-background-image {
-  background-image: url("https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2076&q=80");
-  height: 100%;
+  background-image: url("assets/images/background/banner-background.jpg");
+    height: 100%;
   transition: filter 250ms, transform 250ms;
   width: 100%;
 }
@@ -289,7 +289,7 @@ body input, body h1, body h3, body a, body span {
   color: whitesmoke;
   text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
 }
-#app #youtube-link {
+#app #github-link {
   align-items: center;
   display: inline-flex;
   gap: 5px;
@@ -297,14 +297,14 @@ body input, body h1, body h3, body a, body span {
   padding: 10px 20px;
   text-decoration: none;
 }
-#app #youtube-link i, #app #youtube-link span {
+#app #github-link i, #app #github-link span {
   height: 20px;
   line-height: 20px;
 }
-#app #youtube-link i {
-  color: #ef5350;
+#app #github-link i {
+  color: #38b8ff;
 }
-#app #youtube-link span {
+#app #github-link span {
   color: white;
 }
 #app .menu-section {
@@ -543,6 +543,23 @@ body input, body h1, body h3, body a, body span {
   transition: transform 250ms;
   width: 100%;
   z-index: 1;
+}
+
+.movie-card-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* ajuste a opacidade conforme necessário */
+  z-index: 1;
+}
+
+.movie-card-content {
+  position: relative;
+  z-index: 2;
+  color: white; /* opcional, para garantir que o texto fique legível */
 }
 #app #movies-section .menu-section-content .movie-card .movie-card-content {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
